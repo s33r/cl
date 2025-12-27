@@ -223,6 +223,20 @@ body {
       }
     }
 
+    .extra-week {
+      td {
+        border-top: 3px solid;
+
+        .light & {
+          border-top-color: $border-color-light;
+        }
+
+        .dark & {
+          border-top-color: $border-color-dark;
+        }
+      }
+    }
+
     .calendar-day {
       height: 100px;
       vertical-align: top;

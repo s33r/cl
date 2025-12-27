@@ -224,8 +224,11 @@ export const ISOCalendar: React.FC = () => {
       }
 
       const isCurrentWeek = isoWeek === currentISOWeek && currentYear === today.getFullYear();
+      const isExtraWeek = weekNum >= 4; // 5th and 6th weeks are extra quarter weeks
+      const weekClasses = `calendar-week${isCurrentWeek ? ' current-week' : ''}${isExtraWeek ? ' extra-week' : ''}`;
+
       weeks.push(
-        <tr key={isoWeek} className={`calendar-week${isCurrentWeek ? ' current-week' : ''}`}>
+        <tr key={isoWeek} className={weekClasses}>
           <td className="week-number">W{isoWeek}</td>
           {days}
         </tr>
