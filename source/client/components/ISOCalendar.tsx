@@ -251,11 +251,14 @@ export const ISOCalendar: React.FC = () => {
   return (
     <div className="iso-calendar">
       <div className="calendar-header">
-        <button onClick={previousMonth}>&lt;</button>
+        <div className="calendar-nav">
+          <button onClick={previousMonth}>&lt;</button>
+          <button onClick={nextMonth}>&gt;</button>
+        </div>
         <h2>
           {monthNames[currentMonth - 1]} {currentYear} <span className="quarter-label">({getQuarterName(currentMonth)})</span>
         </h2>
-        <button onClick={nextMonth}>&gt;</button>
+        <div className="calendar-spacer"></div>
       </div>
 
       <table className="calendar-table">

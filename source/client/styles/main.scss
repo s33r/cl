@@ -140,14 +140,27 @@ body {
     align-items: center;
     margin-bottom: 2rem;
 
+    .calendar-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex: 0 0 auto;
+    }
+
     h2 {
       font-size: 1.5rem;
+      flex: 1 1 auto;
+      text-align: center;
 
       .quarter-label {
         font-size: 1rem;
         font-weight: normal;
         opacity: 0.7;
       }
+    }
+
+    .calendar-spacer {
+      flex: 0 0 auto;
+      width: calc(2 * (0.5rem + 1rem + 2 * 0.5rem + 2 * 2px) + 0.5rem); // Match width of nav buttons
     }
 
     button {
