@@ -1,0 +1,36 @@
+{
+  "name": "iso-calendar-events",
+  "version": "1.0.0",
+  "description": "Web application for tracking events on a calendar based on ISO Week Numbers",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node serve.mjs",
+    "start": "node dist/server/index.js"
+  },
+  "keywords": [
+    "calendar",
+    "iso",
+    "events"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@types/uuid": "^9.0.7",
+    "esbuild": "^0.19.11",
+    "esbuild-sass-plugin": "^2.16.1",
+    "sass": "^1.69.7",
+    "typescript": "^5.3.3"
+  }
+}
