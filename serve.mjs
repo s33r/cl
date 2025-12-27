@@ -3,6 +3,7 @@ import { sassPlugin } from 'esbuild-sass-plugin';
 import express from 'express';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -86,7 +87,10 @@ const serve = async () => {
 
   app.post('/api/events', (req, res) => {
     try {
-      const eventData = req.body;
+      const eventData = {
+        ...req.body,
+        id: uuidv4(),
+      };
       events.set(eventData.id, eventData);
       res.status(201).json(eventData);
     } catch (error) {

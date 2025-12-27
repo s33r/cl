@@ -203,6 +203,26 @@ body {
       background-color: rgba($primary-color, 0.1);
     }
 
+    .current-week {
+      .light & {
+        background-color: rgba($primary-color, 0.15);
+      }
+
+      .dark & {
+        background-color: rgba($primary-color, 0.25);
+      }
+
+      .week-number {
+        .light & {
+          background-color: rgba($primary-color, 0.3);
+        }
+
+        .dark & {
+          background-color: rgba($primary-color, 0.4);
+        }
+      }
+    }
+
     .calendar-day {
       height: 100px;
       vertical-align: top;
