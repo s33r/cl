@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RecurrencePattern, RECURRENCE_PATTERNS } from '../../common/RecurrencePattern.js';
 import { EventType } from '../../common/Event.js';
+import * as eventApi from '../services/eventApi.js';
 
 /**
  * Event form props
@@ -82,19 +83,10 @@ export const EventForm: React.FC<EventFormProps> = ({ onClose, onEventCreated, e
     };
 
     try {
-      const url = editingEvent ? `/api/events/${editingEvent.id}` : '/api/events';
-      const method = editingEvent ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editingEvent ? { ...eventData, id: editingEvent.id } : eventData),
-      });
-
-      if (!response.ok) {
-        throw new Error(editingEvent ? 'Failed to update event' : 'Failed to create event');
+      if (editingEvent) {
+        await eventApi.updateEvent(editingEvent.id, { ...eventData, id: editingEvent.id });
+      } else {
+        await eventApi.createEvent(eventData);
       }
 
       if (onEventCreated) {

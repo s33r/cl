@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as eventApi from '../services/eventApi.js';
 
 type CSVImportProps = {
   onImportComplete: () => void;
@@ -53,19 +54,7 @@ export const CSVImport: React.FC<CSVImportProps> = ({ onImportComplete }) => {
     setResult(null);
 
     try {
-      const formData = new FormData();
-      formData.append('csvFile', file);
-
-      const response = await fetch('/api/events/import', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to import CSV');
-      }
-
-      const data = await response.json();
+      const data = await eventApi.importEventsFromCSV(file);
       setResult(data);
 
       if (data.success > 0 || data.updated > 0) {

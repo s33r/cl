@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Event, EventType } from '../../common/Event.js';
 import { doesEventOccurOnISODate } from '../../common/EventRecurrence.js';
+import * as eventApi from '../services/eventApi.js';
 
 /**
  * Event list props
@@ -95,11 +96,7 @@ export const EventList: React.FC<EventListProps> = ({ refreshTrigger, onEditEven
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/events');
-      if (!response.ok) {
-        throw new Error('Failed to fetch events');
-      }
-      const data = await response.json();
+      const data = await eventApi.fetchEvents();
       setEvents(data);
       setError(null);
     } catch (err) {
@@ -118,14 +115,7 @@ export const EventList: React.FC<EventListProps> = ({ refreshTrigger, onEditEven
     }
 
     try {
-      const response = await fetch(`/api/events/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete event');
-      }
-
+      await eventApi.deleteEvent(id);
       await fetchEvents();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -141,11 +131,7 @@ export const EventList: React.FC<EventListProps> = ({ refreshTrigger, onEditEven
     }
 
     try {
-      const deletePromises = events.map(event =>
-        fetch(`/api/events/${event.id}`, { method: 'DELETE' })
-      );
-
-      await Promise.all(deletePromises);
+      await eventApi.deleteAllEvents();
       await fetchEvents();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
