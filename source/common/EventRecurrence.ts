@@ -61,25 +61,86 @@ export const doesISOEventOccurOnDate = (
 
   const eventDate = event.date.value;
 
-  if (eventDate.isoWeek !== isoWeek || eventDate.dayOffset !== dayOffset) {
-    return false;
-  }
-
-  const yearDiff = year - eventDate.year;
-
   switch (event.recurrence) {
     case 'None':
-      return year === eventDate.year;
+      return year === eventDate.year &&
+             eventDate.isoWeek === isoWeek &&
+             eventDate.dayOffset === dayOffset;
+
+    case 'EveryDay':
+      {
+        const eventDateObj = isoDateToNormalDate(eventDate.year, eventDate.isoWeek, eventDate.dayOffset);
+        const checkDate = isoDateToNormalDate(year, isoWeek, dayOffset);
+        return checkDate >= eventDateObj;
+      }
+
+    case 'EveryWeek':
+      if (eventDate.dayOffset !== dayOffset) return false;
+      {
+        const eventDateObj = isoDateToNormalDate(eventDate.year, eventDate.isoWeek, eventDate.dayOffset);
+        const checkDate = isoDateToNormalDate(year, isoWeek, dayOffset);
+        return checkDate >= eventDateObj;
+      }
+
+    case 'EveryMonth':
+      if (eventDate.dayOffset !== dayOffset) return false;
+      {
+        const eventDateObj = isoDateToNormalDate(eventDate.year, eventDate.isoWeek, eventDate.dayOffset);
+        const checkDate = isoDateToNormalDate(year, isoWeek, dayOffset);
+        if (checkDate < eventDateObj) return false;
+
+        // Calculate weeks difference
+        const weeksDiff = (year - eventDate.year) * 52 + (isoWeek - eventDate.isoWeek);
+        return weeksDiff >= 0 && weeksDiff % 4 === 0;
+      }
+
+    case 'EveryQuarter':
+      if (eventDate.dayOffset !== dayOffset) return false;
+      {
+        const eventDateObj = isoDateToNormalDate(eventDate.year, eventDate.isoWeek, eventDate.dayOffset);
+        const checkDate = isoDateToNormalDate(year, isoWeek, dayOffset);
+        if (checkDate < eventDateObj) return false;
+
+        // Calculate weeks difference
+        const weeksDiff = (year - eventDate.year) * 52 + (isoWeek - eventDate.isoWeek);
+        return weeksDiff >= 0 && weeksDiff % 13 === 0;
+      }
+
     case 'EveryYear':
-      return yearDiff >= 0;
+      if (eventDate.isoWeek !== isoWeek || eventDate.dayOffset !== dayOffset) return false;
+      {
+        const yearDiff = year - eventDate.year;
+        return yearDiff >= 0;
+      }
+
     case 'Every2Years':
-      return yearDiff >= 0 && yearDiff % 2 === 0;
+      if (eventDate.isoWeek !== isoWeek || eventDate.dayOffset !== dayOffset) return false;
+      {
+        const yearDiff = year - eventDate.year;
+        return yearDiff >= 0 && yearDiff % 2 === 0;
+      }
+
     case 'Every3Years':
-      return yearDiff >= 0 && yearDiff % 3 === 0;
+      if (eventDate.isoWeek !== isoWeek || eventDate.dayOffset !== dayOffset) return false;
+      {
+        const yearDiff = year - eventDate.year;
+        return yearDiff >= 0 && yearDiff % 3 === 0;
+      }
+
     case 'Every5Years':
-      return yearDiff >= 0 && yearDiff % 5 === 0;
+      if (eventDate.isoWeek !== isoWeek || eventDate.dayOffset !== dayOffset) return false;
+      {
+        const yearDiff = year - eventDate.year;
+        return yearDiff >= 0 && yearDiff % 5 === 0;
+      }
+
     case 'Every10Years':
-      return yearDiff >= 0 && yearDiff % 10 === 0;
+      if (eventDate.isoWeek !== isoWeek || eventDate.dayOffset !== dayOffset) return false;
+      {
+        const yearDiff = year - eventDate.year;
+        return yearDiff >= 0 && yearDiff % 10 === 0;
+      }
+
     default:
       return false;
   }
