@@ -29,6 +29,16 @@ export const NormalCalendar: React.FC = () => {
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  const quarterNames = ['Winter', 'Spring', 'Summer', 'Fall'];
+
+  /**
+   * Gets the quarter name for a given month (0-11)
+   */
+  const getQuarterName = (month: number): string => {
+    const quarterIndex = Math.floor(month / 3);
+    return quarterNames[quarterIndex];
+  };
+
   /**
    * Gets the ISO week number for a given date
    */
@@ -171,7 +181,7 @@ export const NormalCalendar: React.FC = () => {
       <div className="calendar-header">
         <button onClick={previousMonth}>&lt;</button>
         <h2>
-          {monthNames[currentMonth]} {currentYear}
+          {monthNames[currentMonth]} {currentYear} <span className="quarter-label">({getQuarterName(currentMonth)})</span>
         </h2>
         <button onClick={nextMonth}>&gt;</button>
       </div>

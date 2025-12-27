@@ -92,6 +92,16 @@ export const ISOCalendar: React.FC = () => {
 
   const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+  const quarterNames = ['Winter', 'Spring', 'Summer', 'Fall'];
+
+  /**
+   * Gets the quarter name for a given month (1-12)
+   */
+  const getQuarterName = (month: number): string => {
+    const quarterIndex = Math.floor((month - 1) / 3);
+    return quarterNames[quarterIndex];
+  };
+
   /**
    * Fetches events from the API
    */
@@ -243,7 +253,7 @@ export const ISOCalendar: React.FC = () => {
       <div className="calendar-header">
         <button onClick={previousMonth}>&lt;</button>
         <h2>
-          {monthNames[currentMonth - 1]} {currentYear}
+          {monthNames[currentMonth - 1]} {currentYear} <span className="quarter-label">({getQuarterName(currentMonth)})</span>
         </h2>
         <button onClick={nextMonth}>&gt;</button>
       </div>
