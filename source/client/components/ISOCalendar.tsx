@@ -264,7 +264,7 @@ export const ISOCalendar: React.FC = () => {
       <table className="calendar-table">
         <thead>
           <tr>
-            <th className="week-number-header">Week</th>
+            <th className="week-number-header">W</th>
             {dayNames.map((day) => (
               <th key={day}>{day}</th>
             ))}
