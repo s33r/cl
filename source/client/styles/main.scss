@@ -538,6 +538,68 @@ body {
           font-weight: normal;
         }
       }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-flex;
+        border-radius: 8px;
+        padding: 4px;
+
+        .light & {
+          background-color: #e0e0e0;
+        }
+
+        .dark & {
+          background-color: #3a3a3a;
+        }
+
+        .toggle-option {
+          position: relative;
+          z-index: 2;
+          padding: 0.5rem 1.5rem;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: color 0.3s;
+          border-radius: 6px;
+
+          .light & {
+            color: #666;
+
+            &.active {
+              color: white;
+            }
+          }
+
+          .dark & {
+            color: #aaa;
+
+            &.active {
+              color: white;
+            }
+          }
+        }
+
+        .toggle-slider {
+          position: absolute;
+          top: 4px;
+          bottom: 4px;
+          width: calc(50% - 4px);
+          background-color: $primary-color;
+          border-radius: 6px;
+          transition: transform 0.3s ease;
+          z-index: 1;
+
+          &.left {
+            transform: translateX(4px);
+          }
+
+          &.right {
+            transform: translateX(calc(100% + 4px));
+          }
+        }
+      }
     }
 
     .form-actions {

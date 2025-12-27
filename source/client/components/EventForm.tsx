@@ -176,25 +176,22 @@ export const EventForm: React.FC<EventFormProps> = ({ onClose, onEventCreated, e
 
           <div className="form-group">
             <label>Date Type</label>
-            <div className="radio-group">
-              <label>
-                <input
-                  type="radio"
-                  value="iso"
-                  checked={dateType === 'iso'}
-                  onChange={() => setDateType('iso')}
-                />
+            <div className="toggle-switch">
+              <button
+                type="button"
+                className={`toggle-option ${dateType === 'iso' ? 'active' : ''}`}
+                onClick={() => setDateType('iso')}
+              >
                 ISO Date
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="normal"
-                  checked={dateType === 'normal'}
-                  onChange={() => setDateType('normal')}
-                />
+              </button>
+              <button
+                type="button"
+                className={`toggle-option ${dateType === 'normal' ? 'active' : ''}`}
+                onClick={() => setDateType('normal')}
+              >
                 Normal Date
-              </label>
+              </button>
+              <div className={`toggle-slider ${dateType === 'normal' ? 'right' : 'left'}`}></div>
             </div>
           </div>
 
