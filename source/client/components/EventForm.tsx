@@ -253,27 +253,47 @@ export const EventForm: React.FC<EventFormProps> = ({ onClose, onEventCreated, e
               </div>
               <div className="form-group">
                 <label htmlFor="normalMonth">Month</label>
-                <input
-                  type="number"
+                <select
                   id="normalMonth"
                   value={normalMonth}
                   onChange={(e) => setNormalMonth(parseInt(e.target.value))}
-                  min="1"
-                  max="12"
                   required
-                />
+                >
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="normalDay">Day</label>
-                <input
-                  type="number"
+                <select
                   id="normalDay"
                   value={normalDay}
                   onChange={(e) => setNormalDay(parseInt(e.target.value))}
-                  min="1"
-                  max="31"
                   required
-                />
+                >
+                  {Array.from(
+                    { length: new Date(normalYear, normalMonth, 0).getDate() },
+                    (_, i) => i + 1
+                  ).map((day) => {
+                    const date = new Date(normalYear, normalMonth - 1, day);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+                    return (
+                      <option key={day} value={day}>
+                        {day} - {dayName}
+                      </option>
+                    );
+                  })}
+                </select>
               </div>
             </>
           )}
