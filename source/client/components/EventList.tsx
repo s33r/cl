@@ -2,9 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Event, EventType } from '../../common/Event.js';
 
 /**
+ * Event list props
+ */
+type EventListProps = {
+  refreshTrigger?: number;
+  onEditEvent?: (event: EventType) => void;
+};
+
+/**
  * Event list component - displays all events
  */
-export const EventList: React.FC = () => {
+export const EventList: React.FC<EventListProps> = ({ refreshTrigger, onEditEvent }) => {
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +62,7 @@ export const EventList: React.FC = () => {
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [refreshTrigger]);
 
   if (loading) {
     return <div className="loading">Loading events...</div>;
@@ -90,12 +98,22 @@ export const EventList: React.FC = () => {
                     : `${event.date.value.month}/${event.date.value.day}`}
                 </span>
               </div>
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(event.id)}
-              >
-                Delete
-              </button>
+              <div className="event-actions">
+                {onEditEvent && (
+                  <button
+                    className="edit-btn"
+                    onClick={() => onEditEvent(event)}
+                  >
+                    Edit
+                  </button>
+                )}
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDelete(event.id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>

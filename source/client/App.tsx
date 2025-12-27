@@ -5,6 +5,7 @@ import { NormalCalendar } from './components/NormalCalendar.js';
 import { EventForm } from './components/EventForm.js';
 import { About } from './components/About.js';
 import { ThemeProvider, useTheme } from './context/ThemeContext.js';
+import { EventType } from './common/Event.js';
 
 /**
  * Main view type
@@ -17,7 +18,34 @@ type View = 'events' | 'iso-calendar' | 'normal-calendar' | 'about';
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('iso-calendar');
   const [showEventForm, setShowEventForm] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<EventType | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const { theme, toggleTheme } = useTheme();
+
+  /**
+   * Triggers a refresh of the event list
+   */
+  const handleEventCreated = () => {
+    setRefreshTrigger((prev) => prev + 1);
+    setShowEventForm(false);
+    setEditingEvent(null);
+  };
+
+  /**
+   * Handles editing an event
+   */
+  const handleEditEvent = (event: EventType) => {
+    setEditingEvent(event);
+    setShowEventForm(true);
+  };
+
+  /**
+   * Closes the event form
+   */
+  const handleCloseForm = () => {
+    setShowEventForm(false);
+    setEditingEvent(null);
+  };
 
   /**
    * Renders the current view
@@ -25,7 +53,7 @@ const AppContent: React.FC = () => {
   const renderView = () => {
     switch (currentView) {
       case 'events':
-        return <EventList />;
+        return <EventList refreshTrigger={refreshTrigger} onEditEvent={handleEditEvent} />;
       case 'iso-calendar':
         return <ISOCalendar />;
       case 'normal-calendar':
@@ -85,7 +113,11 @@ const AppContent: React.FC = () => {
       </button>
 
       {showEventForm && (
-        <EventForm onClose={() => setShowEventForm(false)} />
+        <EventForm
+          onClose={handleCloseForm}
+          onEventCreated={handleEventCreated}
+          editingEvent={editingEvent}
+        />
       )}
     </div>
   );

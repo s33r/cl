@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RecurrencePattern, RECURRENCE_PATTERNS } from '../../common/RecurrencePattern.js';
+import { EventType } from '../../common/Event.js';
 
 /**
  * Event form props
  */
 type EventFormProps = {
   onClose: () => void;
+  onEventCreated?: () => void;
+  editingEvent?: EventType | null;
 };
 
 /**
  * Event form component - for creating and editing events
  */
-export const EventForm: React.FC<EventFormProps> = ({ onClose }) => {
+export const EventForm: React.FC<EventFormProps> = ({ onClose, onEventCreated, editingEvent }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [financialCost, setFinancialCost] = useState('0');
@@ -28,6 +31,31 @@ export const EventForm: React.FC<EventFormProps> = ({ onClose }) => {
   const [normalYear, setNormalYear] = useState(new Date().getFullYear());
   const [normalMonth, setNormalMonth] = useState(1);
   const [normalDay, setNormalDay] = useState(1);
+
+  /**
+   * Populate form when editing an event
+   */
+  useEffect(() => {
+    if (editingEvent) {
+      setTitle(editingEvent.title);
+      setDescription(editingEvent.description);
+      setFinancialCost(editingEvent.financialCost.toString());
+      setColor(editingEvent.color);
+      setRecurrence(editingEvent.recurrence);
+
+      if (editingEvent.date.type === 'iso') {
+        setDateType('iso');
+        setIsoYear(editingEvent.date.value.year);
+        setIsoWeek(editingEvent.date.value.isoWeek);
+        setDayOffset(editingEvent.date.value.dayOffset);
+      } else {
+        setDateType('normal');
+        setNormalYear(editingEvent.date.value.year);
+        setNormalMonth(editingEvent.date.value.month);
+        setNormalDay(editingEvent.date.value.day);
+      }
+    }
+  }, [editingEvent]);
 
   /**
    * Handles form submission
@@ -54,28 +82,38 @@ export const EventForm: React.FC<EventFormProps> = ({ onClose }) => {
     };
 
     try {
-      const response = await fetch('/api/events', {
-        method: 'POST',
+      const url = editingEvent ? `/api/events/${editingEvent.id}` : '/api/events';
+      const method = editingEvent ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(eventData),
+        body: JSON.stringify(editingEvent ? { ...eventData, id: editingEvent.id } : eventData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create event');
+        throw new Error(editingEvent ? 'Failed to update event' : 'Failed to create event');
       }
 
-      onClose();
+      if (onEventCreated) {
+        onEventCreated();
+      } else {
+        onClose();
+      }
     } catch (error) {
-      alert('Failed to create event: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      alert(
+        (editingEvent ? 'Failed to update event: ' : 'Failed to create event: ') +
+          (error instanceof Error ? error.message : 'Unknown error')
+      );
     }
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2>Create Event</h2>
+        <h2>{editingEvent ? 'Edit Event' : 'Create Event'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="title">Title</label>
@@ -242,7 +280,7 @@ export const EventForm: React.FC<EventFormProps> = ({ onClose }) => {
             <button type="button" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit">Create Event</button>
+            <button type="submit">{editingEvent ? 'Update Event' : 'Create Event'}</button>
           </div>
         </form>
       </div>
