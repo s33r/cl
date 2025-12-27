@@ -26,10 +26,20 @@ type ThemeProviderProps = {
 };
 
 /**
+ * Detects the system's preferred color scheme
+ */
+const getSystemTheme = (): Theme => {
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  return 'light';
+};
+
+/**
  * Theme provider component
  */
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(getSystemTheme());
 
   /**
    * Toggles between light and dark theme
