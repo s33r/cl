@@ -86,6 +86,24 @@ export const CSVImport: React.FC<CSVImportProps> = ({ onImportComplete }) => {
     <div className="csv-import">
       <h2>Import Events from CSV</h2>
 
+      <div className="import-controls">
+        <div className="file-input">
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileChange}
+            disabled={importing}
+          />
+        </div>
+        <button
+          onClick={handleImport}
+          disabled={!file || importing}
+          className="import-btn"
+        >
+          {importing ? 'Importing...' : 'Import CSV'}
+        </button>
+      </div>
+
       <div className="import-instructions">
         <h3>CSV Format</h3>
         <p>Your CSV file should have the following columns:</p>
@@ -110,22 +128,6 @@ export const CSVImport: React.FC<CSVImportProps> = ({ onImportComplete }) => {
             {copySuccess ? 'Copied!' : 'Copy CSV Template'}
           </button>
         </div>
-      </div>
-
-      <div className="import-controls">
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileChange}
-          disabled={importing}
-        />
-        <button
-          onClick={handleImport}
-          disabled={!file || importing}
-          className="import-btn"
-        >
-          {importing ? 'Importing...' : 'Import CSV'}
-        </button>
       </div>
 
       {result && (
