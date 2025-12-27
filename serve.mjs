@@ -8,11 +8,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Development server with hot reloading
+ * Development server with hot reloading and API routes
  */
 const serve = async () => {
   const app = express();
   const PORT = 3000;
+
+  // Middleware for parsing JSON
+  app.use(express.json());
 
   // Build contexts for watching
   const commonContext = await esbuild.context({
@@ -60,10 +63,63 @@ const serve = async () => {
 
   console.log('Watching for changes...');
 
+  // In-memory storage for events (development only)
+  const events = new Map();
+
+  // API Routes
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
+  app.get('/api/events', (req, res) => {
+    const eventList = Array.from(events.values());
+    res.json(eventList);
+  });
+
+  app.get('/api/events/:id', (req, res) => {
+    const event = events.get(req.params.id);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+    res.json(event);
+  });
+
+  app.post('/api/events', (req, res) => {
+    try {
+      const eventData = req.body;
+      events.set(eventData.id, eventData);
+      res.status(201).json(eventData);
+    } catch (error) {
+      res.status(400).json({ error: 'Invalid event data', details: error });
+    }
+  });
+
+  app.put('/api/events/:id', (req, res) => {
+    const existingEvent = events.get(req.params.id);
+    if (!existingEvent) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+    try {
+      const eventData = req.body;
+      events.set(req.params.id, eventData);
+      res.json(eventData);
+    } catch (error) {
+      res.status(400).json({ error: 'Invalid event data', details: error });
+    }
+  });
+
+  app.delete('/api/events/:id', (req, res) => {
+    const deleted = events.delete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+    res.status(204).send();
+  });
+
   // Serve static files
   app.use('/dist', express.static(path.join(__dirname, 'dist')));
 
-  // Serve index.html
+  // Serve index.html for all other routes (SPA fallback)
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
   });
