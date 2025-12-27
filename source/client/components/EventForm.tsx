@@ -224,16 +224,21 @@ export const EventForm: React.FC<EventFormProps> = ({ onClose, onEventCreated, e
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="dayOffset">Day Offset (0=Mon, 6=Sun)</label>
-                <input
-                  type="number"
+                <label htmlFor="dayOffset">Day of Week</label>
+                <select
                   id="dayOffset"
                   value={dayOffset}
                   onChange={(e) => setDayOffset(parseInt(e.target.value))}
-                  min="0"
-                  max="6"
                   required
-                />
+                >
+                  <option value="0">Monday</option>
+                  <option value="1">Tuesday</option>
+                  <option value="2">Wednesday</option>
+                  <option value="3">Thursday</option>
+                  <option value="4">Friday</option>
+                  <option value="5">Saturday</option>
+                  <option value="6">Sunday</option>
+                </select>
               </div>
             </>
           ) : (

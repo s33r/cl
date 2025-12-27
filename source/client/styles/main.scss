@@ -237,6 +237,18 @@ body {
         }
       }
 
+      &.iso-week-highlight {
+        .light & {
+          background-color: rgba($secondary-color, 0.1);
+          border: 2px solid rgba($secondary-color, 0.3);
+        }
+
+        .dark & {
+          background-color: rgba($secondary-color, 0.15);
+          border: 2px solid rgba($secondary-color, 0.4);
+        }
+      }
+
       .day-number {
         font-weight: bold;
         margin-bottom: 0.25rem;
@@ -244,6 +256,39 @@ body {
 
       .day-events {
         font-size: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        overflow-y: auto;
+        max-height: 70px;
+
+        .event-item {
+          padding: 0.15rem 0.3rem;
+          border-left: 3px solid;
+          border-radius: 2px;
+          cursor: pointer;
+          font-size: 0.75rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          transition: all 0.2s;
+
+          .light & {
+            background-color: rgba($primary-color, 0.1);
+
+            &:hover {
+              background-color: rgba($primary-color, 0.2);
+            }
+          }
+
+          .dark & {
+            background-color: rgba($primary-color, 0.2);
+
+            &:hover {
+              background-color: rgba($primary-color, 0.3);
+            }
+          }
+        }
       }
     }
   }
@@ -399,6 +444,22 @@ body {
 
   h2 {
     margin-bottom: 1.5rem;
+  }
+
+  .event-detail-content {
+    .detail-group {
+      margin-bottom: 1.5rem;
+
+      strong {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.6;
+      }
+    }
   }
 
   form {

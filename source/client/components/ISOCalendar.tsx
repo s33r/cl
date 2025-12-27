@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Event } from '../../common/Event.js';
+import { doesISOEventOccurOnDate } from '../../common/EventRecurrence.js';
+import { EventDetailModal } from './EventDetailModal.js';
 
 /**
  * Gets the ISO week number for a given date
@@ -69,6 +72,8 @@ export const ISOCalendar: React.FC = () => {
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(initialMonth); // 1-12
+  const [events, setEvents] = useState<Event[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   const monthNames = [
     'January',
@@ -86,6 +91,31 @@ export const ISOCalendar: React.FC = () => {
   ];
 
   const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  /**
+   * Fetches events from the API
+   */
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('/api/events');
+        const data = await response.json();
+        const eventObjects = data.map((e: any) => Event.fromObject(e));
+        setEvents(eventObjects);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  /**
+   * Gets events for a specific ISO date
+   */
+  const getEventsForDate = (year: number, isoWeek: number, dayOffset: number): Event[] => {
+    return events.filter(event => doesISOEventOccurOnDate(event, year, isoWeek, dayOffset));
+  };
 
   /**
    * Navigates to the previous month
@@ -172,10 +202,23 @@ export const ISOCalendar: React.FC = () => {
         const date = new Date(mondayDate);
         date.setDate(mondayDate.getDate() + dayOffset);
 
+        const dayEvents = getEventsForDate(currentYear, isoWeek, dayOffset);
+
         days.push(
           <td key={dayOffset} className="calendar-day">
             <div className="day-number">{formatDate(date)}</div>
-            <div className="day-events"></div>
+            <div className="day-events">
+              {dayEvents.map(event => (
+                <div
+                  key={event.id}
+                  className="event-item"
+                  style={{ borderLeftColor: event.color }}
+                  onClick={() => setSelectedEvent(event)}
+                >
+                  {event.title}
+                </div>
+              ))}
+            </div>
           </td>
         );
       }
@@ -213,6 +256,13 @@ export const ISOCalendar: React.FC = () => {
         </thead>
         <tbody>{renderWeeks()}</tbody>
       </table>
+
+      {selectedEvent && (
+        <EventDetailModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
     </div>
   );
 };

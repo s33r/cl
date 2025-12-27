@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Event } from '../../common/Event.js';
+import { doesNormalEventOccurOnDate } from '../../common/EventRecurrence.js';
+import { EventDetailModal } from './EventDetailModal.js';
 
 /**
  * Normal Calendar component - displays traditional calendar view
@@ -6,6 +9,8 @@ import React, { useState } from 'react';
 export const NormalCalendar: React.FC = () => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [events, setEvents] = useState<Event[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   const monthNames = [
     'January',
@@ -23,6 +28,61 @@ export const NormalCalendar: React.FC = () => {
   ];
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  /**
+   * Gets the ISO week number for a given date
+   */
+  const getISOWeek = (date: Date): number => {
+    const target = new Date(date.valueOf());
+    const dayNumber = (date.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNumber + 3);
+    const firstThursday = target.valueOf();
+    target.setMonth(0, 1);
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+    }
+    return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
+  };
+
+  /**
+   * Checks if a date is in the current ISO week
+   */
+  const isInCurrentISOWeek = (year: number, month: number, day: number): boolean => {
+    const today = new Date();
+    const currentISOWeek = getISOWeek(today);
+    const currentYear = today.getFullYear();
+
+    const dateToCheck = new Date(year, month - 1, day);
+    const dateISOWeek = getISOWeek(dateToCheck);
+    const dateYear = dateToCheck.getFullYear();
+
+    return dateYear === currentYear && dateISOWeek === currentISOWeek;
+  };
+
+  /**
+   * Fetches events from the API
+   */
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('/api/events');
+        const data = await response.json();
+        const eventObjects = data.map((e: any) => Event.fromObject(e));
+        setEvents(eventObjects);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  /**
+   * Gets events for a specific normal date
+   */
+  const getEventsForDate = (year: number, month: number, day: number): Event[] => {
+    return events.filter(event => doesNormalEventOccurOnDate(event, year, month, day));
+  };
 
   /**
    * Navigates to the previous month
@@ -64,10 +124,24 @@ export const NormalCalendar: React.FC = () => {
 
     // Add cells for each day of the month
     for (let day = 1; day <= daysInMonth; day++) {
+      const dayEvents = getEventsForDate(currentYear, currentMonth + 1, day);
+      const isCurrentISOWeekDay = isInCurrentISOWeek(currentYear, currentMonth + 1, day);
+
       days.push(
-        <td key={day} className="calendar-day">
+        <td key={day} className={`calendar-day${isCurrentISOWeekDay ? ' iso-week-highlight' : ''}`}>
           <div className="day-number">{day}</div>
-          <div className="day-events"></div>
+          <div className="day-events">
+            {dayEvents.map(event => (
+              <div
+                key={event.id}
+                className="event-item"
+                style={{ borderLeftColor: event.color }}
+                onClick={() => setSelectedEvent(event)}
+              >
+                {event.title}
+              </div>
+            ))}
+          </div>
         </td>
       );
 
@@ -112,6 +186,13 @@ export const NormalCalendar: React.FC = () => {
         </thead>
         <tbody>{renderDays()}</tbody>
       </table>
+
+      {selectedEvent && (
+        <EventDetailModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
     </div>
   );
 };
