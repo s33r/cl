@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Event } from '../../common/Event.js';
-import { doesISOEventOccurOnDate } from '../../common/EventRecurrence.js';
+import { doesEventOccurOnISODate } from '../../common/EventRecurrence.js';
 import { EventDetailModal } from './EventDetailModal.js';
 
 /**
@@ -111,10 +111,10 @@ export const ISOCalendar: React.FC = () => {
   }, []);
 
   /**
-   * Gets events for a specific ISO date
+   * Gets events for a specific ISO date (includes both ISO and Normal date events)
    */
   const getEventsForDate = (year: number, isoWeek: number, dayOffset: number): Event[] => {
-    return events.filter(event => doesISOEventOccurOnDate(event, year, isoWeek, dayOffset));
+    return events.filter(event => doesEventOccurOnISODate(event, year, isoWeek, dayOffset));
   };
 
   /**

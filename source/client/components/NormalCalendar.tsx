@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Event } from '../../common/Event.js';
-import { doesNormalEventOccurOnDate } from '../../common/EventRecurrence.js';
+import { doesEventOccurOnNormalDate } from '../../common/EventRecurrence.js';
 import { EventDetailModal } from './EventDetailModal.js';
 
 /**
@@ -78,10 +78,10 @@ export const NormalCalendar: React.FC = () => {
   }, []);
 
   /**
-   * Gets events for a specific normal date
+   * Gets events for a specific normal date (includes both ISO and Normal date events)
    */
   const getEventsForDate = (year: number, month: number, day: number): Event[] => {
-    return events.filter(event => doesNormalEventOccurOnDate(event, year, month, day));
+    return events.filter(event => doesEventOccurOnNormalDate(event, year, month, day));
   };
 
   /**
