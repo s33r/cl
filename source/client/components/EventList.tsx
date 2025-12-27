@@ -45,12 +45,41 @@ const getDateOfISOWeek = (year: number, week: number): Date => {
  * Finds the next occurrence of an event as both ISO and Normal dates
  */
 const getNextOccurrence = (event: EventType): { isoDate: string; normalDate: string } => {
+  // For non-recurring events, directly return the event's date
+  if (event.recurrence === 'None') {
+    if (event.date.type === 'iso') {
+      const { year, isoWeek, dayOffset } = event.date.value;
+      const monday = getDateOfISOWeek(year, isoWeek);
+      const normalDate = new Date(monday);
+      normalDate.setDate(monday.getDate() + dayOffset);
+
+      const normalMonth = normalDate.getMonth() + 1;
+      const normalDay = normalDate.getDate();
+
+      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${dayOffset + 1}`;
+      const normalDateStr = `${year}-${String(normalMonth).padStart(2, '0')}-${String(normalDay).padStart(2, '0')}`;
+
+      return { isoDate, normalDate: normalDateStr };
+    } else {
+      const { year, month, day } = event.date.value;
+      const normalDateObj = new Date(year, month - 1, day);
+      const isoWeek = getISOWeek(normalDateObj);
+      const dayOffset = (normalDateObj.getDay() + 6) % 7;
+
+      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${dayOffset + 1}`;
+      const normalDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+      return { isoDate, normalDate };
+    }
+  }
+
+  // For recurring events, find the next occurrence
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Search up to 2 years in the future
+  // Search up to 10 years in the future for recurring events
   const maxDate = new Date(today);
-  maxDate.setFullYear(maxDate.getFullYear() + 2);
+  maxDate.setFullYear(maxDate.getFullYear() + 10);
 
   let currentDate = new Date(today);
 
