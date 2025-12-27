@@ -11,6 +11,27 @@ export const CSVImport: React.FC<CSVImportProps> = ({ onImportComplete }) => {
   const [file, setFile] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<{ success: number; updated: number; errors: string[] } | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  /**
+   * CSV template with headers and example event
+   */
+  const csvTemplate = `id,title,description,financialCost,color,recurrence,dateType,year,isoWeek,dayOffset,month,day
+,Team Meeting,Weekly team standup,0,#3498db,EveryWeek,iso,2025,1,0,,
+,Project Deadline,Q1 deliverable deadline,5000,#e74c3c,None,normal,2025,,,3,31`;
+
+  /**
+   * Copies CSV template to clipboard
+   */
+  const handleCopyTemplate = async () => {
+    try {
+      await navigator.clipboard.writeText(csvTemplate);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy template:', error);
+    }
+  };
 
   /**
    * Handles file selection
@@ -82,6 +103,13 @@ export const CSVImport: React.FC<CSVImportProps> = ({ onImportComplete }) => {
           <li><strong>month</strong>: Month number (1-12, for normal dates)</li>
           <li><strong>day</strong>: Day number (1-31, for normal dates)</li>
         </ul>
+
+        <div className="template-section">
+          <p>Click the button below to copy a CSV template with headers and example events:</p>
+          <button onClick={handleCopyTemplate} className="copy-template-btn">
+            {copySuccess ? 'Copied!' : 'Copy CSV Template'}
+          </button>
+        </div>
       </div>
 
       <div className="import-controls">
