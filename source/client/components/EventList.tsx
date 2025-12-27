@@ -56,7 +56,7 @@ const getNextOccurrence = (event: EventType): { isoDate: string; normalDate: str
       const normalMonth = normalDate.getMonth() + 1;
       const normalDay = normalDate.getDate();
 
-      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${dayOffset + 1}`;
+      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${String(dayOffset + 1).padStart(2, '0')}`;
       const normalDateStr = `${year}-${String(normalMonth).padStart(2, '0')}-${String(normalDay).padStart(2, '0')}`;
 
       return { isoDate, normalDate: normalDateStr };
@@ -66,7 +66,7 @@ const getNextOccurrence = (event: EventType): { isoDate: string; normalDate: str
       const isoWeek = getISOWeek(normalDateObj);
       const dayOffset = (normalDateObj.getDay() + 6) % 7;
 
-      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${dayOffset + 1}`;
+      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${String(dayOffset + 1).padStart(2, '0')}`;
       const normalDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
       return { isoDate, normalDate };
@@ -95,7 +95,7 @@ const getNextOccurrence = (event: EventType): { isoDate: string; normalDate: str
       const normalDay = currentDate.getDate();
 
       // Format ISO date as YYYY-WW-DD (with day offset starting from 1)
-      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${dayOffset + 1}`;
+      const isoDate = `${year}-${String(isoWeek).padStart(2, '0')}-${String(dayOffset + 1).padStart(2, '0')}`;
 
       // Format normal date as YYYY-MM-DD
       const normalDate = `${year}-${String(normalMonth).padStart(2, '0')}-${String(normalDay).padStart(2, '0')}`;
