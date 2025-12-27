@@ -1,11 +1,63 @@
 import React, { useState } from 'react';
 
 /**
+ * Gets the ISO week number for a given date
+ */
+const getISOWeek = (date: Date): number => {
+  const target = new Date(date.valueOf());
+  const dayNumber = (date.getDay() + 6) % 7;
+  target.setDate(target.getDate() - dayNumber + 3);
+  const firstThursday = target.valueOf();
+  target.setMonth(0, 1);
+  if (target.getDay() !== 4) {
+    target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+  }
+  return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
+};
+
+/**
+ * Calculates the ISO calendar month (1-12) that contains a given ISO week
+ */
+const getISOMonthFromWeek = (isoWeek: number): number => {
+  // Each quarter has 13 weeks (3 months of 4 weeks + 1 extra week)
+  // Quarter 1: weeks 1-13 (months 1-3)
+  // Quarter 2: weeks 14-26 (months 4-6)
+  // Quarter 3: weeks 27-39 (months 7-9)
+  // Quarter 4: weeks 40-52/53 (months 10-12)
+
+  if (isoWeek <= 13) {
+    // Q1: weeks 1-13
+    if (isoWeek <= 4) return 1;
+    if (isoWeek <= 8) return 2;
+    return 3;
+  } else if (isoWeek <= 26) {
+    // Q2: weeks 14-26
+    if (isoWeek <= 17) return 4;
+    if (isoWeek <= 21) return 5;
+    return 6;
+  } else if (isoWeek <= 39) {
+    // Q3: weeks 27-39
+    if (isoWeek <= 30) return 7;
+    if (isoWeek <= 34) return 8;
+    return 9;
+  } else {
+    // Q4: weeks 40-52/53
+    if (isoWeek <= 43) return 10;
+    if (isoWeek <= 47) return 11;
+    return 12;
+  }
+};
+
+/**
  * ISO Calendar component - displays calendar based on ISO week numbers
  */
 export const ISOCalendar: React.FC = () => {
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(1); // 1-12
+  const today = new Date();
+  const currentISOWeek = getISOWeek(today);
+  const initialMonth = getISOMonthFromWeek(currentISOWeek);
+
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(initialMonth); // 1-12
 
   const monthNames = [
     'January',
@@ -23,21 +75,6 @@ export const ISOCalendar: React.FC = () => {
   ];
 
   const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-  /**
-   * Gets the ISO week number for a given date
-   */
-  const getISOWeek = (date: Date): number => {
-    const target = new Date(date.valueOf());
-    const dayNumber = (date.getDay() + 6) % 7;
-    target.setDate(target.getDate() - dayNumber + 3);
-    const firstThursday = target.valueOf();
-    target.setMonth(0, 1);
-    if (target.getDay() !== 4) {
-      target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-    }
-    return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
-  };
 
   /**
    * Navigates to the previous month
