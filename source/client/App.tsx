@@ -4,13 +4,14 @@ import { ISOCalendar } from './components/ISOCalendar.js';
 import { NormalCalendar } from './components/NormalCalendar.js';
 import { EventForm } from './components/EventForm.js';
 import { About } from './components/About.js';
+import { CSVImport } from './components/CSVImport.js';
 import { ThemeProvider, useTheme } from './context/ThemeContext.js';
 import { EventType } from './common/Event.js';
 
 /**
  * Main view type
  */
-type View = 'events' | 'iso-calendar' | 'normal-calendar' | 'about';
+type View = 'events' | 'iso-calendar' | 'normal-calendar' | 'csv-import' | 'about';
 
 /**
  * Main application component content
@@ -58,6 +59,8 @@ const AppContent: React.FC = () => {
         return <ISOCalendar />;
       case 'normal-calendar':
         return <NormalCalendar />;
+      case 'csv-import':
+        return <CSVImport onImportComplete={handleEventCreated} />;
       case 'about':
         return <About />;
       default:
@@ -87,6 +90,12 @@ const AppContent: React.FC = () => {
             onClick={() => setCurrentView('events')}
           >
             Events
+          </button>
+          <button
+            className={currentView === 'csv-import' ? 'active' : ''}
+            onClick={() => setCurrentView('csv-import')}
+          >
+            Import CSV
           </button>
           <button
             className={currentView === 'about' ? 'active' : ''}
