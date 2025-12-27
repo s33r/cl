@@ -426,6 +426,42 @@ body {
       }
     }
 
+    .event-next-occurrence {
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+
+      .light & {
+        background-color: #f5f5f5;
+        border: 1px solid #e0e0e0;
+      }
+
+      .dark & {
+        background-color: #333;
+        border: 1px solid #444;
+      }
+
+      .occurrence-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.25rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .occurrence-label {
+          font-weight: bold;
+          opacity: 0.8;
+        }
+
+        .occurrence-value {
+          font-family: monospace;
+        }
+      }
+    }
+
     .event-actions {
       display: flex;
       gap: 0.5rem;
