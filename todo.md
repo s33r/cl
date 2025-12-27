@@ -1,5 +1,5 @@
 # TODO
+- [ ] Display event titles on both calendars. When clicked these titles should open a read only view of the event details.
+- [ ] When creating or editing an event the day drop down should display week day names to the user.
+- [ ] The days that make up the current ISO Week should be highlighted on the normal calendar.
 
-- [x] The ISO Calendar view must default to show the current ISO Week
-- [x] The delete button does not work, instead it shows "Error: Failed to delete event"
-- [x] The ISO Calendar does not show the leap week on the last month
