@@ -60,6 +60,26 @@ export const EventList: React.FC<EventListProps> = ({ refreshTrigger, onEditEven
     }
   };
 
+  /**
+   * Deletes all events after confirmation
+   */
+  const handleDeleteAll = async () => {
+    if (!confirm(`Are you sure you want to delete all ${events.length} events? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const deletePromises = events.map(event =>
+        fetch(`/api/events/${event.id}`, { method: 'DELETE' })
+      );
+
+      await Promise.all(deletePromises);
+      await fetchEvents();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    }
+  };
+
   useEffect(() => {
     fetchEvents();
   }, [refreshTrigger]);
@@ -74,7 +94,17 @@ export const EventList: React.FC<EventListProps> = ({ refreshTrigger, onEditEven
 
   return (
     <div className="event-list">
-      <h2>Events</h2>
+      <div className="event-list-header">
+        <h2>Events</h2>
+        {events.length > 0 && (
+          <button
+            className="delete-all-btn"
+            onClick={handleDeleteAll}
+          >
+            Delete All
+          </button>
+        )}
+      </div>
       {events.length === 0 ? (
         <p>No events found. Create your first event!</p>
       ) : (

@@ -345,6 +345,32 @@ body {
 
 // Event List Styles
 .event-list {
+  .event-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      margin: 0;
+    }
+
+    .delete-all-btn {
+      padding: 0.5rem 1rem;
+      background-color: $danger-color;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: color.scale($danger-color, $lightness: -10%);
+      }
+    }
+  }
+
   h2 {
     margin-bottom: 2rem;
   }
