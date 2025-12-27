@@ -121,7 +121,9 @@ export const EventList: React.FC<EventListProps> = ({ refreshTrigger, onEditEven
                 <span className="event-cost">
                   ${event.financialCost.toFixed(2)}
                 </span>
-                <span className="event-recurrence">{event.recurrence}</span>
+                {event.recurrence !== 'None' && (
+                  <span className="event-recurrence">{event.recurrence}</span>
+                )}
                 <span className="event-date">
                   {event.date.type === 'iso'
                     ? `W${event.date.value.isoWeek} D${event.date.value.dayOffset}`
