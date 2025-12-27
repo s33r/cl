@@ -1,3 +1,5 @@
 # TODO
-- [x] The client web server and the api web server need to run on the same port.
-- [x] The ISO calendar should have the month and day in each cell instead of week numbers. The month and day should be in the form: "MM-dd"
+- [ ] Fix react error on event list: "Warning: Each child in a list should have a unique "key" prop."
+- [ ] Replace font with the fixed width JetBrains Mono font
+- [ ] Ensure that event list view is updated once a new event is created.
+- [ ] Add ability to edit events that have already been created.

@@ -111,7 +111,9 @@ Do not use TypeScript interfaces, instead use types.
 
 ### Documentation
 
-All typeScript elements should have jsdoc
+- All typeScript functions should have meaningful jsdoc that includes information about all parameters and return values.
+- All classes should have meaningful jsdoc that describes their purpose and intent.
+- All public class properties should have meaningful jsdoc that describes their purpose and intent.
 
 ## Important Context
 
@@ -123,3 +125,6 @@ build: run esbuild to compile the source code
 serve: run esbuild watch and a local web server to test the app.
 
 ## Notes for Claude
+
+- When committing code, ensure that the commit message is pithy expresses the intent of the changes. There is no need for detail since it is already captured in the file changes.
+- When working on todo tasks only do one at a time.
