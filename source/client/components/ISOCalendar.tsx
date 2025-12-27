@@ -16,6 +16,17 @@ const getISOWeek = (date: Date): number => {
 };
 
 /**
+ * Checks if a given year has a leap week (week 53)
+ * A year has 53 weeks when it starts on Thursday or ends on Thursday
+ */
+const hasLeapWeek = (year: number): boolean => {
+  // Check if Dec 31 of the given year is in ISO week 53
+  const dec31 = new Date(year, 11, 31);
+  const isoWeek = getISOWeek(dec31);
+  return isoWeek === 53;
+};
+
+/**
  * Calculates the ISO calendar month (1-12) that contains a given ISO week
  */
 const getISOMonthFromWeek = (isoWeek: number): number => {
@@ -130,8 +141,21 @@ export const ISOCalendar: React.FC = () => {
   const renderWeeks = () => {
     const weeks: JSX.Element[] = [];
 
-    // Calculate weeks for this month (4 weeks per month in ISO calendar)
-    const weeksInMonth = 4;
+    // Determine the number of weeks for this month
+    // Regular months: 4 weeks
+    // Last month of each quarter (3, 6, 9): 5 weeks (includes the extra week)
+    // Month 12: 5 or 6 weeks (includes extra week + leap week if applicable)
+    let weeksInMonth = 4;
+    const isLastMonthOfQuarter = currentMonth % 3 === 0;
+
+    if (isLastMonthOfQuarter) {
+      weeksInMonth = 5; // Extra week for the quarter
+
+      if (currentMonth === 12 && hasLeapWeek(currentYear)) {
+        weeksInMonth = 6; // Extra week + leap week for December
+      }
+    }
+
     const quarterStartMonth = Math.floor((currentMonth - 1) / 3) * 3 + 1;
     const monthInQuarter = currentMonth - quarterStartMonth;
     const startWeek = (Math.floor((currentMonth - 1) / 3) * 13) + (monthInQuarter * 4) + 1;
@@ -156,8 +180,9 @@ export const ISOCalendar: React.FC = () => {
         );
       }
 
+      const isCurrentWeek = isoWeek === currentISOWeek && currentYear === today.getFullYear();
       weeks.push(
-        <tr key={isoWeek} className="calendar-week">
+        <tr key={isoWeek} className={`calendar-week${isCurrentWeek ? ' current-week' : ''}`}>
           <td className="week-number">W{isoWeek}</td>
           {days}
         </tr>
