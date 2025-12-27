@@ -239,7 +239,7 @@ export const ISOCalendar: React.FC = () => {
 
       weeks.push(
         <tr key={isoWeek} className={weekClasses}>
-          <td className="week-number">W{isoWeek}</td>
+          <td className="week-number">{isoWeek}</td>
           {days}
         </tr>
       );

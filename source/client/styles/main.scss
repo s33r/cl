@@ -222,6 +222,15 @@ body {
     .week-number {
       font-weight: bold;
       background-color: rgba($primary-color, 0.1);
+      width: 3rem;
+      min-width: 3rem;
+      max-width: 3rem;
+    }
+
+    .week-number-header {
+      width: 3rem;
+      min-width: 3rem;
+      max-width: 3rem;
     }
 
     .current-week {
