@@ -73,7 +73,7 @@ const AppContent: React.FC = () => {
       <header className="app-header">
         <div className="header-top">
           <h1>ISO Calendar Events</h1>
-          <a href="https://ehwillows.com" className="home-link" target="_blank" rel="noopener noreferrer">
+          <a href="/vibe-coding.html" className="home-link">
             Home
           </a>
         </div>
