@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Event } from '../../common/Event.js';
 import { doesEventOccurOnNormalDate } from '../../common/EventRecurrence.js';
 import { EventDetailModal } from './EventDetailModal.js';
+import * as eventApi from '../services/eventApi.js';
 
 /**
  * Normal Calendar component - displays traditional calendar view
@@ -75,8 +76,7 @@ export const NormalCalendar: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('/api/events');
-        const data = await response.json();
+        const data = await eventApi.fetchEvents();
         const eventObjects = data.map((e: any) => Event.fromObject(e));
         setEvents(eventObjects);
       } catch (error) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Event } from '../../common/Event.js';
 import { doesEventOccurOnISODate } from '../../common/EventRecurrence.js';
 import { EventDetailModal } from './EventDetailModal.js';
+import * as eventApi from '../services/eventApi.js';
 
 /**
  * Gets the ISO week number for a given date
@@ -108,8 +109,7 @@ export const ISOCalendar: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('/api/events');
-        const data = await response.json();
+        const data = await eventApi.fetchEvents();
         const eventObjects = data.map((e: any) => Event.fromObject(e));
         setEvents(eventObjects);
       } catch (error) {
