@@ -71,7 +71,12 @@ const AppContent: React.FC = () => {
   return (
     <div className={`app ${theme}`}>
       <header className="app-header">
-        <h1>ISO Calendar Events</h1>
+        <div className="header-top">
+          <h1>ISO Calendar Events</h1>
+          <a href="https://ehwillows.com" className="home-link" target="_blank" rel="noopener noreferrer">
+            Home
+          </a>
+        </div>
         <nav className="app-nav">
           <button
             className={currentView === 'iso-calendar' ? 'active' : ''}

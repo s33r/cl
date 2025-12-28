@@ -62,9 +62,47 @@ body {
     border-bottom-color: $border-color-dark;
   }
 
-  h1 {
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1rem;
+  }
+
+  h1 {
+    margin: 0;
     font-size: 2rem;
+  }
+
+  .home-link {
+    padding: 0.5rem 1rem;
+    border: 2px solid;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.3s;
+
+    .light & {
+      border-color: $border-color-light;
+      color: $text-color-light;
+
+      &:hover {
+        background-color: $primary-color;
+        color: white;
+        border-color: $primary-color;
+      }
+    }
+
+    .dark & {
+      border-color: $border-color-dark;
+      color: $text-color-dark;
+
+      &:hover {
+        background-color: $primary-color;
+        color: white;
+        border-color: $primary-color;
+      }
+    }
   }
 }
 
